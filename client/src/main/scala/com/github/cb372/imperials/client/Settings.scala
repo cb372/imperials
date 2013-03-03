@@ -14,6 +14,8 @@ class Settings(config: Config) {
 
   val imperialsConfig = config.getConfig("imperials")
 
+  def dashboardNotifyUrl: Option[String] = getString(imperialsConfig, "dashboardNotifyUrl")
+
   def mongoHost: String = getString(imperialsConfig, "mongo.host") getOrElse "localhost"
   def mongoPort: Int = getInt(imperialsConfig, "mongo.port") getOrElse 27017
 

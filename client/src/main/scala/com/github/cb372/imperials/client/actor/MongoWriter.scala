@@ -12,7 +12,7 @@ import com.mongodb.casbah.commons.conversions.scala._
  * Author: chris
  * Created: 3/3/13
  */
-class MongoWriter(val mongo: MongoCollection) extends Actor {
+class MongoWriter(mongo: MongoCollection) extends Actor {
   val log = Logging(context.system, this)
 
   RegisterJodaTimeConversionHelpers()

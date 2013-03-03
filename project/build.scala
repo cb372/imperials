@@ -1,11 +1,12 @@
 import sbt._
 import Keys._
+import play.Project._
 
 object ImperialsBuild extends Build {
     lazy val root = Project(
       id = "imperials",
       base = file("."),
-      settings = standardSettings) aggregate(client)
+      settings = standardSettings) aggregate(client, dashboard)
 
     lazy val client = Project(
       id = "client",
@@ -18,15 +19,26 @@ object ImperialsBuild extends Build {
       )
     )
 
+    lazy val dashboard = play.Project(
+      "dashboard",
+      "0.1",
+      commonDeps ++ Seq(
+        // deps
+      ),
+      path = file("dashboard")
+    )
+
+    lazy val commonDeps = Seq(
+      "org.mongodb" %% "casbah-core" % "2.5.0",
+      "ch.qos.logback" % "logback-classic" % "1.0.9",
+      "org.scalatest" %% "scalatest" % "2.0.M6-SNAP8" % "test"
+    )
+
     lazy val standardSettings = Defaults.defaultSettings ++ Seq(
       organization := "com.github.cb372",
       version      := "0.1-SNAPSHOT",
       scalaVersion := "2.10.0",
-      libraryDependencies ++= Seq(
-        "org.mongodb" %% "casbah-core" % "2.5.0",
-        "ch.qos.logback" % "logback-classic" % "1.0.9",
-        "org.scalatest" %% "scalatest" % "2.0.M6-SNAP8" % "test"
-      ),
+      libraryDependencies ++= commonDeps,
       parallelExecution in Test := false
     )
 }

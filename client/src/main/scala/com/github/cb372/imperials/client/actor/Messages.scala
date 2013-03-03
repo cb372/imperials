@@ -14,6 +14,7 @@ object Messages {
   case object Fetch
   case class Fetched(fetchResult: FetchResult)
   case class WriteToMongo(fetchResult: FetchResult)
+  case class NotifyDashboard(fetchResult: FetchResult)
 
 }
 

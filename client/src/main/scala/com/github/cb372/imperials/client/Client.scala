@@ -21,12 +21,17 @@ object Client extends App {
   val mongoClient = MongoClient(settings.mongoHost, settings.mongoPort)
   val mongoDb = mongoClient("imperials")
 
+  val dashboardNotifyUrl = settings.dashboardNotifyUrl
+
   val actorSystem = ActorSystem("imperials-client")
 
   for (host <- settings.hosts) {
     val metricsUrl = settings.metricsUrl(host)
     val mongoCollection = mongoDb(host)
-    val hostActor = actorSystem.actorOf(Props(new MetricsPoller(host, metricsUrl, mongoCollection)), name = host)
+    val hostActor = actorSystem.actorOf(
+      Props(new MetricsPoller(host, metricsUrl, mongoCollection, dashboardNotifyUrl)),
+      name = host
+    )
 
     val pollInterval = settings.pollInterval(host)
     actorSystem.scheduler.schedule(0.seconds, pollInterval, hostActor, Poll)

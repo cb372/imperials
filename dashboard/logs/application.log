@@ -1,0 +1,6 @@
+2013-03-03 17:02:29,432 - [INFO] - from play in main 
+Listening for HTTP on /0.0.0.0:9000
+
+2013-03-03 17:03:11,095 - [INFO] - from play in New I/O  worker #1 
+Application started (Dev)
+

@@ -4,9 +4,8 @@ import com.mongodb.casbah.Imports._
 import akka.actor.Actor
 import akka.event.Logging
 import com.github.cb372.imperials.client.actor.Messages.{FetchResult, WriteToMongo}
-import com.mongodb.util.JSON
-import com.mongodb.DBObject
 import com.mongodb.casbah.commons.conversions.scala._
+import org.json4s.mongo.JObjectParser.parse
 
 /**
  * Author: chris
@@ -15,19 +14,14 @@ import com.mongodb.casbah.commons.conversions.scala._
 class MongoWriter(mongo: MongoCollection) extends Actor {
   val log = Logging(context.system, this)
 
-  RegisterJodaTimeConversionHelpers()
+  implicit val formats = org.json4s.DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
 
   def receive = {
-    case WriteToMongo(FetchResult(fetchTime, json)) => {
-      val data = JSON.parse(json).asInstanceOf[DBObject]
-      val keysWithDots: collection.Map[String, AnyRef] = data.filterKeys(_.contains("."))
-      keysWithDots.foreach { case (k, v) =>
-        data.put(k.replaceAllLiterally(".", "_"), v)
-        data.removeField(k)
-      }
+    case WriteToMongo(FetchResult(host, fetchTime, data)) => {
       val mongoObj = MongoDBObject(
+        "host" -> host,
         "fetchTime" -> fetchTime,
-        "data" -> data
+        "data" -> parse(data)
       )
       mongo.save(mongoObj)
       log.info("Saved metrics info to MongoDB")

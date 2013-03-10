@@ -31,6 +31,9 @@ object ImperialsBuild extends Build {
     lazy val commonDeps = Seq(
       "org.mongodb" %% "casbah-core" % "2.5.0",
       "ch.qos.logback" % "logback-classic" % "1.0.9",
+      "org.json4s" %% "json4s-jackson" % "3.1.0",
+      "org.json4s" %% "json4s-mongo" % "3.1.0",
+      "org.json4s" %% "json4s-ext" % "3.1.0",
       "org.scalatest" %% "scalatest" % "2.0.M6-SNAP8" % "test"
     )
 

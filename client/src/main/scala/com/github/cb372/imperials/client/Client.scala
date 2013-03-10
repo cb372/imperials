@@ -19,7 +19,7 @@ object Client extends App {
   val settings = new Settings(ConfigFactory.load())
 
   val mongoClient = MongoClient(settings.mongoHost, settings.mongoPort)
-  val mongoDb = mongoClient("imperials")
+  val mongoCollection = mongoClient("imperials")("metrics")
 
   val dashboardNotifyUrl = settings.dashboardNotifyUrl
 
@@ -27,7 +27,6 @@ object Client extends App {
 
   for (host <- settings.hosts) {
     val metricsUrl = settings.metricsUrl(host)
-    val mongoCollection = mongoDb(host)
     val hostActor = actorSystem.actorOf(
       Props(new MetricsPoller(host, metricsUrl, mongoCollection, dashboardNotifyUrl)),
       name = host
